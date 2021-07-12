@@ -1,0 +1,28 @@
+name: inv-mgmt
+version: 0.0.0
+description: Inventory Management for crazy people
+maintainer: Viktor Kleen <viktor@kleen.org>
+
+defaults:
+  local: defaults.yaml
+
+dependencies:
+  - base
+  - bytestring
+  - Cabal
+  - containers
+  - cryptonite
+  - data-default
+  - hledger-lib
+  - memory
+  - text
+  - validation
+
+library:
+  source-dirs: src
+
+  ghc-options:
+      - -Wall
+      - -Wcompat
+      - -haddock
+      - -Wno-unticked-promoted-constructors

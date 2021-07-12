@@ -1,0 +1,12 @@
+#!/usr/bin/env cached-nix-shell
+#!nix-shell -i runhaskell
+#!nix-shell shell.nix
+
+{-# LANGUAGE MultiWayIf #-}
+{-# LANGUAGE OverloadedStrings #-}
+
+module Main where
+
+import Scripts.ValidatePNs
+
+main = validatePNs
