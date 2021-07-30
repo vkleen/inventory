@@ -45,6 +45,7 @@
         haskellTool = t: p.haskell.lib.justStaticExecutables p.haskell.packages."ghc${ghcVersion}".${t};
       in p.mkShell {
         packages = [
+          p.haskell.packages."ghc${ghcVersion}".ghc
           inputs.haskell-language-server.packages.${s}."haskell-language-server-${ghcVersion}"
           (haskellTool "cabal-install")
           (haskellTool "ghcid")
