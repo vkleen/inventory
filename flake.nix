@@ -34,28 +34,12 @@
             hledger-src = inputs.hledger-src;
           };
         })
-        (final: prev: {
-          haskell = prev.haskell // {
-            packageOverrides = hfinal: hprev:
-            {
-              hledger = hfinal.callCabal2nixWithOptions "hledger" inputs.hledger-src "--subpath=hledger" {};
-              hledger-lib = hfinal.callCabal2nixWithOptions "hledger-lib" inputs.hledger-src "--subpath=hledger-lib" {};
-              hledger-ui = hfinal.callCabal2nixWithOptions "hledger-ui" inputs.hledger-src "--subpath=hledger-ui" {};
-              hledger-web = hfinal.callCabal2nixWithOptions "hledger-web" inputs.hledger-src "--subpath=hledger-web" {};
-            };
-          };
-        })
       ];
-
 
       pkgs = lib.mapAttrs (system: pkgs:
           import pkgs.path { inherit system; config = { allowBroken = true; }; overlays = overlays system;}
         ) inputs.nixpkgs.legacyPackages;
       forAllSystems = f: lib.mapAttrs f pkgs;
-
-      pkg = _: p: {
-        inv-mgmt = p.haskell.packages."ghc${ghcVersion}".callCabal2nix "inv-mgmt" "${self}/mgmt" {};
-      };
 
       shell = s: p: let
         haskellTool = t: p.haskell.lib.justStaticExecutables p.haskell.packages."ghc${ghcVersion}".${t};
@@ -67,22 +51,12 @@
           (haskellTool "hie-bios")
           (haskellTool "hlint")
           (haskellTool "hpack")
-        ];
-        inputsFrom = [ self.legacyPackages."${s}".inv-mgmt.env ];
-      };
 
-      ghcShell = s: p: p.mkShell {
-        packages = [
-          (p.haskell.packages."ghc${ghcVersion}".ghcWithPackages (g: [ self.legacyPackages."${s}".inv-mgmt ]))
+          p.bazel p.python3
         ];
       };
     in {
       nixpkgs = forAllSystems (_: p: p);
-
-      legacyPackages = forAllSystems pkg;
       devShell = forAllSystems shell;
-      ghcShell = forAllSystems ghcShell;
-
-      defaultPackage = forAllSystems (s: _: self.legacyPackages."${s}".inv-mgmt);
   };
 }
