@@ -7,6 +7,8 @@ http_archive(
     strip_prefix = "rules_haskell-8940004c95b802151b53d3bbefbebb601fd7b4df",
     urls = ["https://github.com/tweag/rules_haskell/archive/8940004c95b802151b53d3bbefbebb601fd7b4df.tar.gz"],
     sha256 = "b7427136ef99fab22ff406967680dd1d7db035002db259f10a27ad2d3e8689c3",
+    patches = [ "//:bazel/rules_haskell_core_exceptions.patch" ],
+    patch_args = [ "-p1" ],
 )
 
 http_archive(
@@ -57,7 +59,7 @@ haskell_cabal_library(
 )
     """,
     patch_args = ["-p1"],
-    patches = ["//:csv.patch"],
+    patches = ["//:bazel/csv.patch"],
     strip_prefix = "csv-0.1.2",
     sha256 = "8cf43442325faa1368f9b55ad952beccf677d9980cdffa3d70a7f204a23ae600",
     urls = ["https://hackage.haskell.org/package/csv-0.1.2/csv-0.1.2.tar.gz"]
@@ -147,5 +149,5 @@ load("@rules_haskell//haskell:nixpkgs.bzl", "haskell_register_ghc_nixpkgs")
 haskell_register_ghc_nixpkgs(
     repositories = {"nixpkgs": "@nixpkgs"},
     version = "9.0.1",
-    attribute_path = "haskell.packages.ghc8104.ghc"
+    attribute_path = "haskell.packages.ghc901.ghc"
 )

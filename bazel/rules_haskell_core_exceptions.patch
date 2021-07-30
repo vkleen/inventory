@@ -1,0 +1,12 @@
+diff --git a/haskell/cabal.bzl b/haskell/cabal.bzl
+index e0d289f7..620446c9 100644
+--- a/haskell/cabal.bzl
++++ b/haskell/cabal.bzl
+@@ -956,6 +956,7 @@ _CORE_PACKAGES = [
+     "containers",
+     "deepseq",
+     "directory",
++    "exceptions",
+     "filepath",
+     "ghc",
+     "ghc-bignum",
