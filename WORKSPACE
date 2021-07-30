@@ -134,7 +134,7 @@ stack_snapshot(
         "utf8-string",
         "validation",
     ],
-    snapshot = "lts-18.4",
+    snapshot = "nightly-2021-07-30",
     stack_snapshot_json = "//:stackage_snapshot.json",
 
     vendored_packages = {
@@ -146,6 +146,6 @@ stack_snapshot(
 load("@rules_haskell//haskell:nixpkgs.bzl", "haskell_register_ghc_nixpkgs")
 haskell_register_ghc_nixpkgs(
     repositories = {"nixpkgs": "@nixpkgs"},
-    version = "8.10.4",
+    version = "9.0.1",
     attribute_path = "haskell.packages.ghc8104.ghc"
 )

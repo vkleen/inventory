@@ -7,14 +7,15 @@
       ref = "master";
     };
 
+    flake-utils.url = "github:numtide/flake-utils";
     haskell-language-server = {
       type = "github";
       owner = "haskell";
       repo = "haskell-language-server";
+      ref = "master";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    flake-utils.url = "github:numtide/flake-utils";
     hledger-src = {
       url = "github:vkleen/hledger";
       flake = false;
@@ -25,7 +26,7 @@
 
   outputs = { self, ... }@inputs:
     let
-      ghcVersion = "8104";
+      ghcVersion = "901";
 
       inherit (inputs.nixpkgs) lib;
       overlays = system: [
@@ -49,7 +50,6 @@
           inputs.haskell-language-server.packages.${s}."haskell-language-server-${ghcVersion}"
           (haskellTool "cabal-install")
           (haskellTool "ghcid")
-          (haskellTool "hie-bios")
           (haskellTool "hlint")
           (haskellTool "hpack")
 
