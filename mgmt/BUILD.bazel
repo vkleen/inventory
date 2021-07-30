@@ -1,0 +1,34 @@
+load("@rules_haskell//haskell:defs.bzl",
+    "haskell_library",
+    "haskell_toolchain_library"
+)
+
+_stackage_deps = [
+    "cryptonite",
+    "data-default",
+    "memory",
+    "repline",
+    "validation",
+    "hledger-lib",
+    "base",
+    "bytestring",
+    "Cabal",
+    "containers",
+    "text"
+]
+
+_toolchain_deps = [
+
+]
+
+[ haskell_toolchain_library(name = d) for d in _toolchain_deps ]
+haskell_toolchain_library(name = "hledger-lib")
+
+haskell_library(
+    name = "inv-mgmt",
+    srcs = glob(["src/**/*.hs"]),
+    src_strip_prefix = "src",
+    visibility = ["//visibility:public"],
+    deps = [ "@stackage//:{}".format(d) for d in _stackage_deps ] +
+           [ ":{}".format(d) for d in _toolchain_deps ]
+)

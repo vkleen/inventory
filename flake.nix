@@ -7,7 +7,6 @@
       ref = "master";
     };
 
-    flake-utils.url = "github:numtide/flake-utils";
     haskell-language-server = {
       type = "github";
       owner = "haskell";
@@ -15,6 +14,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    flake-utils.url = "github:numtide/flake-utils";
     hledger-src = {
       url = "github:vkleen/hledger";
       flake = false;
@@ -29,6 +29,11 @@
 
       inherit (inputs.nixpkgs) lib;
       overlays = system: [
+        (final: prev: {
+          sources = prev.sources or {} // {
+            hledger-src = inputs.hledger-src;
+          };
+        })
         (final: prev: {
           haskell = prev.haskell // {
             packageOverrides = hfinal: hprev:
@@ -52,12 +57,16 @@
         inv-mgmt = p.haskell.packages."ghc${ghcVersion}".callCabal2nix "inv-mgmt" "${self}/mgmt" {};
       };
 
-      shell = s: p: p.mkShell {
+      shell = s: p: let
+        haskellTool = t: p.haskell.lib.justStaticExecutables p.haskell.packages."ghc${ghcVersion}".${t};
+      in p.mkShell {
         packages = [
           inputs.haskell-language-server.packages.${s}."haskell-language-server-${ghcVersion}"
-          p.haskell.packages."ghc${ghcVersion}".cabal-install
-          p.haskell.packages."ghc${ghcVersion}".ghcid
-          p.hpack
+          (haskellTool "cabal-install")
+          (haskellTool "ghcid")
+          (haskellTool "hie-bios")
+          (haskellTool "hlint")
+          (haskellTool "hpack")
         ];
         inputsFrom = [ self.legacyPackages."${s}".inv-mgmt.env ];
       };
@@ -68,6 +77,8 @@
         ];
       };
     in {
+      nixpkgs = forAllSystems (_: p: p);
+
       legacyPackages = forAllSystems pkg;
       devShell = forAllSystems shell;
       ghcShell = forAllSystems ghcShell;

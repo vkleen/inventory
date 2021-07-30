@@ -1,0 +1,9 @@
+cradle:
+  multi:
+    - path: ./.
+      config: { cradle: { none: } }
+    - path: "./mgmt"
+      config:
+        cradle:
+          bios:
+            program: ".hie-bios"

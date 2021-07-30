@@ -1,0 +1,8 @@
+diff -Naur csv-0.1.2.orig/Setup.hs csv-0.1.2/Setup.hs
+--- csv-0.1.2.orig/Setup.hs	2021-07-29 22:50:29.718673600 +0000
++++ csv-0.1.2/Setup.hs	2021-07-29 22:50:41.981945571 +0000
+@@ -1,3 +1,3 @@
+ #!/usr/bin/env runhaskell
+ import Distribution.Simple
+-main = defaultMainWithHooks defaultUserHooks
++main = defaultMain

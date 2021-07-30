@@ -2,9 +2,6 @@
 #!nix-shell -i runhaskell
 #!nix-shell shell.nix
 
-{-# LANGUAGE MultiWayIf #-}
-{-# LANGUAGE OverloadedStrings #-}
-
 module Main where
 
 import Scripts.ValidatePNs

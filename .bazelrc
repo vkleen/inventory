@@ -1,0 +1,14 @@
+build:ci --loading_phase_threads=1
+build:ci --jobs=2
+build:ci --verbose_failures
+common:ci --color=no
+test:ci --test_output=errors
+
+build --host_platform=@io_tweag_rules_nixpkgs//nixpkgs/platforms:host
+run --host_platform=@io_tweag_rules_nixpkgs//nixpkgs/platforms:host
+
+test --test_env=LANG=en_US.utf8 --test_env=LOCALE_ARCHIVE
+
+# build --experimental_convenience_symlinks=ignore
+
+try-import .bazelrc.local

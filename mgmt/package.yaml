@@ -15,6 +15,7 @@ dependencies:
   - data-default
   - hledger-lib
   - memory
+  - repline
   - text
   - validation
 

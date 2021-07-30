@@ -1,0 +1,7 @@
+#!/usr/bin/env cached-nix-shell
+#!nix-shell -i bash
+#!nix-shell -p bazel -p python3
+set -euo pipefail
+bazel build :hie-bios --output_groups=hie_bios --experimental_show_artifacts
+cat bazel-bin/hie-bios@hie-bios >"$HIE_BIOS_OUTPUT"
+echo -Wwarn >>"$HIE_BIOS_OUTPUT"

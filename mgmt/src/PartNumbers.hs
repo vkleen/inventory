@@ -5,8 +5,6 @@ import Data.Function ((&))
 
 import qualified Data.Text as T
 import qualified Data.Text.Encoding as T
-import qualified Data.List as LL
-import qualified Data.Map as M
 import qualified Data.ByteString.Builder as B
 import qualified Data.ByteString.Lazy as BL
 import Data.ByteArray (convert)
