@@ -8,5 +8,6 @@ haskell_repl(
   collect_data = False,
   deps = [
     "//mgmt:inv-mgmt",
+    "//nih:ixset-typed",
   ],
 )

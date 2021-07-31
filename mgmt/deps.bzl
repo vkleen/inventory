@@ -10,5 +10,4 @@ stackage_deps = [
     "repline",
     "text",
     "validation",
-    # "ixset-typed",
 ]

@@ -28,7 +28,6 @@ load(
     "@io_tweag_rules_nixpkgs//nixpkgs:nixpkgs.bzl",
     "nixpkgs_git_repository",
     "nixpkgs_local_repository",
-    "nixpkgs_package",
     "nixpkgs_cc_configure",
     "nixpkgs_python_configure",
 )
@@ -45,92 +44,16 @@ nixpkgs_local_repository(
 nixpkgs_cc_configure( repository = "@nixpkgs" )
 nixpkgs_python_configure( repository = "@nixpkgs" )
 
-http_archive(
-    name = "csv",
-    build_file_content = """
-load("@rules_haskell//haskell:cabal.bzl", "haskell_cabal_library")
-load("@stackage//:packages.bzl", "packages")
-haskell_cabal_library(
-    name = "csv",
-    version = packages["csv"].version,
-    srcs = glob(["**"]),
-    deps = packages["csv"].deps,
-    visibility = ["//visibility:public"],
-)
-    """,
-    patch_args = ["-p1"],
-    patches = ["//:bazel/csv.patch"],
-    strip_prefix = "csv-0.1.2",
-    sha256 = "8cf43442325faa1368f9b55ad952beccf677d9980cdffa3d70a7f204a23ae600",
-    urls = ["https://hackage.haskell.org/package/csv-0.1.2/csv-0.1.2.tar.gz"]
-)
-
-nixpkgs_package(
-    name = "hledger-lib",
-    repositories = { "nixpkgs": "@nixpkgs" },
-    build_file_content = """
-load("@rules_haskell//haskell:cabal.bzl", "haskell_cabal_library")
-load("@stackage//:packages.bzl", "packages")
-haskell_cabal_library(
-    name = "hledger-lib",
-    version = packages["hledger-lib"].version,
-    srcs = glob(["**"]),
-    deps = packages["hledger-lib"].deps,
-    visibility = ["//visibility:public"],
-)
-    """,
-    nix_file_content = """
-with import <nixpkgs> {};
-symlinkJoin { name = "hledger-src"; paths = [ "${sources.hledger-src}/hledger-lib" ]; }
-    """,
-)
-
 load("@rules_haskell//haskell:cabal.bzl", "stack_snapshot")
 load("//mgmt:deps.bzl", "stackage_deps")
-_vendored_packages = {
-    "csv": "@csv//:csv",
-    "hledger-lib": "@hledger-lib//:hledger-lib",
-}
-_extra_packages = [
-    # csv
-    "filepath",
-    "parsec",
+load("//nih:deps.bzl", "vendored_deps", "vendored_packages")
 
-    # hledger-lib
-    "aeson",
-    "aeson-pretty",
-    "ansi-terminal",
-    "array",
-    "base-compat-batteries",
-    "blaze-markup",
-    "call-stack",
-    "cassava",
-    "cassava-megaparsec",
-    "cmdargs",
-    "Decimal",
-    "directory",
-    "extra",
-    "file-embed",
-    "Glob",
-    "hashtables",
-    "megaparsec",
-    "mtl",
-    "old-time",
-    "parser-combinators",
-    "pretty-simple",
-    "regex-tdfa",
-    "safe",
-    "tabular",
-    "tasty",
-    "tasty-hunit",
-    "template-haskell",
-    "time",
-    "timeit",
-    "transformers",
-    "uglymemo",
-    "unordered-containers",
-    "utf8-string",
+_extra_packages = [
+  d for deps in vendored_deps.values() for d in deps
 ]
+
+_vendored_packages = vendored_packages()
+
 stack_snapshot(
     name = "stackage",
     extra_deps = {},

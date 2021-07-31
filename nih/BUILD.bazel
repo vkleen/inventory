@@ -1,0 +1,10 @@
+load("@rules_haskell//haskell:defs.bzl", "haskell_library")
+load(":deps.bzl", "vendored_deps")
+
+haskell_library(
+  name = "ixset-typed",
+  deps = ["@stackage//:{}".format(d) for d in vendored_deps["ixset-typed"]],
+  srcs = glob(["ixset-typed/src/**/*.hs"]),
+  src_strip_prefix = "ixset-typed/src",
+  visibility = ["//visibility:public"],
+)

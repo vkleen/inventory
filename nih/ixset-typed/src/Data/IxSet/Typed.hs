@@ -558,35 +558,21 @@ inferIxSet ixset typeName calName entryPoints
     = do calInfo <- reify calName
          typeInfo <- reify typeName
          let (context,binders) = case typeInfo of
-#if MIN_VERSION_template_haskell(2,11,0)
                                  TyConI (DataD ctxt _ nms _ _ _) -> (ctxt,nms)
                                  TyConI (NewtypeD ctxt _ nms _ _ _) -> (ctxt,nms)
-#else
-                                 TyConI (DataD ctxt _ nms _ _) -> (ctxt,nms)
-                                 TyConI (NewtypeD ctxt _ nms _ _) -> (ctxt,nms)
-#endif
-
                                  TyConI (TySynD _ nms _) -> ([],nms)
                                  _ -> error "IxSet.inferIxSet typeInfo unexpected match"
 
              names = map tyVarBndrToName binders
 
              typeCon = List.foldl' appT (conT typeName) (map varT names)
-#if MIN_VERSION_template_haskell(2,10,0)
              mkCtx c = List.foldl' appT (conT c)
-#else
-             mkCtx = classP
-#endif
              dataCtxConQ = concat [[mkCtx ''Data [varT name], mkCtx ''Ord [varT name]] | name <- names]
              fullContext = do
                 dataCtxCon <- sequence dataCtxConQ
                 return (context ++ dataCtxCon)
          case calInfo of
-#if MIN_VERSION_template_haskell(2,11,0)
            VarI _ _t _ ->
-#else
-           VarI _ _t _ _ ->
-#endif
                let {-
                    calType = getCalType t
                    getCalType (ForallT _names _ t') = getCalType t'
@@ -594,7 +580,7 @@ inferIxSet ixset typeName calName entryPoints
                    getCalType t' = error ("Unexpected type in getCalType: " ++ pprint t')
                    -}
                    mkEntryPoint n = (conE 'Ix) `appE`
-                                    (sigE (varE 'Map.empty) (forallT binders (return context) $
+                                    (sigE (varE 'Map.empty) (forallT (fmap ((const SpecifiedSpec) <$>) binders) (return context) $
                                                              appT (appT (conT ''Map) (conT n))
                                                                       (appT (conT ''Set) typeCon))) `appE`
                                     (varE 'flattenWithCalcs `appE` varE calName)
@@ -610,9 +596,9 @@ inferIxSet ixset typeName calName entryPoints
                      return $ [i, ixType']  -- ++ d
            _ -> error "IxSet.inferIxSet calInfo unexpected match"
 
-tyVarBndrToName :: TyVarBndr -> Name
-tyVarBndrToName (PlainTV nm) = nm
-tyVarBndrToName (KindedTV nm _) = nm
+tyVarBndrToName :: TyVarBndr flag -> Name
+tyVarBndrToName (PlainTV nm _) = nm
+tyVarBndrToName (KindedTV nm _ _) = nm
 
 -- | Generically traverses the argument to find all occurences of
 -- values of type @b@ and returns them as a list.

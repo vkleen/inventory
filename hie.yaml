@@ -7,3 +7,8 @@ cradle:
         cradle:
           bios:
             program: ".hie-bios"
+    - path: "./nih"
+      config:
+        cradle:
+          bios:
+            program: ".hie-bios"

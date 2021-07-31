@@ -10,5 +10,6 @@ haskell_library(
     srcs = glob(["src/**/*.hs"]),
     src_strip_prefix = "src",
     visibility = ["//visibility:public"],
-    deps = [ "@stackage//:{}".format(d) for d in stackage_deps ],
+    deps = [ "@stackage//:{}".format(d) for d in stackage_deps ] +
+           [ "//nih:ixset-typed" ],
 )
