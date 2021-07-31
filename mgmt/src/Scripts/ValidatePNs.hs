@@ -2,6 +2,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE LambdaCase #-}
 {-# LANGUAGE DerivingStrategies #-}
+{-# LANGUAGE ImportQualifiedPost #-}
 module Scripts.ValidatePNs where
 
 import System.Environment (getArgs)
@@ -12,16 +13,19 @@ import Data.Foldable (traverse_)
 
 import System.Exit (exitFailure, exitSuccess)
 
-import Hledger.Read
+import Hledger.Read ( readJournalFile, InputOpts(strict_) )
 import Hledger.Data
-import qualified Data.List as LL
-import qualified Data.Text as T
-import qualified Data.Map as M
+    ( Commodity(ctags, csymbol),
+      CommoditySymbol,
+      Journal(jcommodities) )
+import Data.List qualified as LL
+import Data.Text qualified as T
+import Data.Map qualified as M
 
-import Data.Validation
+import Data.Validation ( validation, Validation(..) )
 
-import Inventory.Types
-import PartNumbers
+import Inventory.Types ( MfgPN(MfgPN), PN(..) )
+import PartNumbers ( createPN )
 
 data CommodityError = NoMPNTag CommoditySymbol
                     | HashMismatch CommoditySymbol PN

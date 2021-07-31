@@ -1,17 +1,18 @@
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE ImportQualifiedPost #-}
 module PartNumbers where
 
-import Data.Function ((&))
+import Data.Function ( (&) )
 
-import qualified Data.Text as T
-import qualified Data.Text.Encoding as T
-import qualified Data.ByteString.Builder as B
-import qualified Data.ByteString.Lazy as BL
-import Data.ByteArray (convert)
+import Data.Text qualified as T
+import Data.Text.Encoding qualified as T
+import Data.ByteString.Builder qualified as B
+import Data.ByteString.Lazy qualified as BL
+import Data.ByteArray ( convert )
 
-import Crypto.Hash
+import Crypto.Hash ( hashWith, Blake2b_512(..) )
 
-import Inventory.Types
+import Inventory.Types ( MfgPN(..), PN(..) )
 
 createPN :: MfgPN -> PN
 createPN (MfgPN x) = PN $

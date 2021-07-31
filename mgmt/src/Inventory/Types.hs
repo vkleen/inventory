@@ -1,6 +1,7 @@
+{-# LANGUAGE ImportQualifiedPost #-}
 module Inventory.Types where
 
-import qualified Data.Text as T
+import Data.Text qualified as T
 
 newtype MfgPN = MfgPN T.Text
   deriving (Show)

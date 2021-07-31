@@ -22,7 +22,6 @@ _toolchain_deps = [
 ]
 
 [ haskell_toolchain_library(name = d) for d in _toolchain_deps ]
-haskell_toolchain_library(name = "hledger-lib")
 
 haskell_library(
     name = "inv-mgmt",
