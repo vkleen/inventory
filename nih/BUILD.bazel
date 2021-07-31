@@ -6,5 +6,5 @@ haskell_library(
   deps = ["@stackage//:{}".format(d) for d in vendored_deps["ixset-typed"]],
   srcs = glob(["ixset-typed/src/**/*.hs"]),
   src_strip_prefix = "ixset-typed/src",
-  visibility = ["//visibility:public"],
+  visibility = ["//:__pkg__", "//mgmt:__pkg__"],
 )
